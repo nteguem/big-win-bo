@@ -34,7 +34,6 @@ function* addPrediction({ payload }) {
     if (response.status === 200 || response.status === 201) {
       yield put({ type: types.ADD_PREDICTION_SUCCESS, payload: response.data });
       toast.success('Prediction added successfully');
-      payload.navigate('/predictions');
     } else {
       yield put({ type: types.ADD_PREDICTION_FAILURE, payload: response.message });
     }

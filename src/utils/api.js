@@ -7,7 +7,7 @@ export const request = async (method, url, data, headers = {}) => {
   try {
     const isFormData = data instanceof FormData;
     const response = await fetch(remoteUrl + url, {
-      method,
+      method, 
       headers: {
         ...(isFormData ? {} : { 'Content-Type': 'application/json; charset=utf-8' }),
         ...headers,

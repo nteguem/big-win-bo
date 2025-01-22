@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Typography, Box, CircularProgress, Switch, Tooltip } from "@mui/material";
+import { Typography, Box, CircularProgress, Switch, Tooltip,useMediaQuery,useTheme } from "@mui/material";
 import InboxIcon from "@mui/icons-material/Inbox";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 import ActionBar from "./ActionBar";
@@ -20,6 +20,8 @@ export default function DataTable({
   onVisibilityChange,
 }) {
   const [selectedRows, setSelectedRows] = useState([]);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const generateColumns = (rows) => {
     if (rows.length === 0) return [];
@@ -64,7 +66,7 @@ export default function DataTable({
                 <Tooltip
                   title={
                     <Box sx={{ p: 1, textAlign: "left" }}>
-                      <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                      <Typography variant="body1" sx={{ fontWeight: "bold",fontSize:1 }}>
                         {homeTeam.team_name} vs {awayTeam.team_name}
                       </Typography>
                       <Typography variant="body2">
@@ -141,9 +143,9 @@ export default function DataTable({
                     <img
                       src={homeTeam.logo}
                       alt={`${homeTeam.team_name} logo`}
-                      style={{ width: 20, height: 20, objectFit: "contain", marginRight: 5 }}
+                      style={{ width: 13, height: 13, objectFit: "contain", marginRight: 5 }}
                     />
-                    <Typography variant="body2" component="span" sx={{ fontWeight: "bold" }}>
+                    <Typography variant="body2" component="span" sx={{ fontWeight: "bold",fontSize:11}}>
                       {homeTeam.team_name}
                     </Typography>
                     <Typography variant="body2" component="span" sx={{ mx: 1 }}>
@@ -152,9 +154,9 @@ export default function DataTable({
                     <img
                       src={awayTeam.logo}
                       alt={`${awayTeam.team_name} logo`}
-                      style={{ width: 20, height: 20, objectFit: "contain", marginRight: 5 }}
+                      style={{ width: 13, height: 13, objectFit: "contain", marginRight: 5 }}
                     />
-                    <Typography variant="body2" component="span" sx={{ fontWeight: "bold" }}>
+                    <Typography variant="body2" component="span" sx={{ fontWeight: "bold",fontSize:11 }}>
                       {awayTeam.team_name}
                     </Typography>
                   </Box>
@@ -253,7 +255,7 @@ export default function DataTable({
       alignItems="stretch"
       p={2}
     >
-      {title && (
+      {title && !isMobile && (
         <Typography
           variant="h6"
           sx={{ color: "#333", fontWeight: "bold", mb: 2 }}

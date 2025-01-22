@@ -63,7 +63,7 @@ const Sidebar = ({ isMobile, menuItems }) => {
               justifyContent: "center",
             }}
           >
-            <img src="logo.png" alt="Logo" style={{ height: 100 }} />
+            <img src="app/logo.png" alt="Logo" style={{ height: 100 }} />
           </Box>
         )}
 
