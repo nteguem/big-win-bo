@@ -1,56 +1,140 @@
 import React, { useState } from 'react';
-import { Box, useMediaQuery, useTheme, Drawer } from '@mui/material';
+import { Box, useMediaQuery, useTheme, Drawer, IconButton } from '@mui/material';
+import { Menu as MenuIcon } from '@mui/icons-material';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
 
-const Layout = ({ children,menuItems }) => {
-  const [open, setOpen] = useState(true);
-  const [mobileOpen, setMobileOpen] = useState(false);
+const Layout = ({ children, menuItems }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [isDrawerOpen, setIsDrawerOpen] = useState(!isMobile);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  
+  const drawerWidth = {
+    open: 240,
+    closed: 80
+  };
 
   const handleDrawerToggle = () => {
     if (isMobile) {
-      setMobileOpen(!mobileOpen);
+      setIsMobileDrawerOpen(!isMobileDrawerOpen);
     } else {
-      setOpen(!open);
+      setIsDrawerOpen(!isDrawerOpen);
     }
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>      
+    <Box 
+      sx={{ 
+        display: 'flex',
+        minHeight: '100vh',
+        maxWidth: '100vw',
+        overflow: 'hidden'
+      }}
+    >
       {/* Header */}
-      <Header onMobileDrawerToggle={handleDrawerToggle} />
+      <Header 
+        onMobileDrawerToggle={handleDrawerToggle}
+        drawerWidth={isDrawerOpen ? drawerWidth.open : drawerWidth.closed}
+        isMobile={isMobile}
+      />
 
       {/* Mobile Drawer */}
-      <Drawer
-        variant="temporary"
-        open={mobileOpen}
-        onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true, // Better mobile performance
-        }}
-      >
-        <Sidebar open={true} onDrawerToggle={handleDrawerToggle} menuItems={menuItems} isMobile={mobileOpen} />
-      </Drawer>
- 
-      {/* Desktop Drawer */}
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-        <Sidebar open={open} onDrawerToggle={handleDrawerToggle} menuItems={menuItems}  />
-      </Box>
+      {isMobile && (
+        <Drawer
+          variant="temporary"
+          anchor="left"
+          open={isMobileDrawerOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{ 
+            keepMounted: true,
+            sx: { zIndex: theme.zIndex.drawer + 2 }
+          }}
+          sx={{
+            display: { xs: 'block', md: 'none' },
+            '& .MuiDrawer-paper': {
+              width: drawerWidth.open,
+              boxSizing: 'border-box',
+            },
+          }}
+        >
+          <Sidebar 
+            menuItems={menuItems}
+            isMobile={true}
+            open={true}
+          />
+        </Drawer>
+      )}
 
-      {/* Main content */}
+      {/* Desktop Drawer */}
+      {!isMobile && (
+        <Drawer
+          variant="permanent"
+          open={isDrawerOpen}
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            '& .MuiDrawer-paper': {
+              width: isDrawerOpen ? drawerWidth.open : drawerWidth.closed,
+              transition: theme.transitions.create('width', {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen,
+              }),
+              overflowX: 'hidden',
+              boxSizing: 'border-box',
+              zIndex: theme.zIndex.drawer,
+            },
+          }}
+        >
+          <Sidebar 
+            menuItems={menuItems}
+            isMobile={false}
+            open={isDrawerOpen}
+          />
+        </Drawer>
+      )}
+
+      {/* Main Content */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${open ? 300 : 70}px)` },
-          mt: '64px', // Height of AppBar
-        
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+          height: '100vh',
+          overflow: 'auto',
+          backgroundColor: theme.palette.background.default,
+          padding: {
+            xs: 2,
+            sm: 3
+          },
+          width: {
+            xs: '100%',
+            md: `calc(100% - ${isDrawerOpen ? drawerWidth.open : drawerWidth.closed}px)`
+          },
+          marginTop: '64px',
+          marginLeft: {
+            xs: 0,
+            md: isDrawerOpen ? `${drawerWidth.open}px` : `${drawerWidth.closed}px`
+          },
+          transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
+          '& > *': {
+            maxWidth: '100%'
+          }
         }}
       >
-        {children}
+        <Box sx={{ 
+          maxWidth: '100%',
+          overflow: 'hidden',
+          '& > *': {
+            maxWidth: '100%'
+          }
+        }}>
+          {children}
+        </Box>
       </Box>
     </Box>
   );
