@@ -32,7 +32,7 @@ const LoginPage = () => {
         elevation={6}
         sx={{ padding: 4, width: '100%', maxWidth: 400, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
       >
-        <Box component="img" src="app/logo.png" alt="Logo" sx={{ width: 100, marginBottom: 2 }} />
+        <Box component="img" src="logo.png" alt="Logo" sx={{ width: 100, marginBottom: 2 }} />
         <Typography variant="h5" component="h1" sx={{ marginBottom: 3 }}>
           Connexion
         </Typography>

@@ -32,7 +32,12 @@ const LayoutForm = ({
   );
 
   return (
-    <Container maxWidth="md" sx={{ marginTop: 4 }}>
+    <Container maxWidth="md"   sx={{ 
+      marginTop: 0, 
+      height: '100vh', 
+      display: 'flex', 
+      flexDirection: 'column',
+    }}>
       <form onSubmit={submit}>
         <Paper elevation={4} sx={{ padding: 4, borderRadius: 3, backgroundColor: '#f9f9f9' }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ marginBottom: 3 }}>

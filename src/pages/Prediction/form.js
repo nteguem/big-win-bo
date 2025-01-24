@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
   FormControl,
-  Stack,
   Box,
   TextField,
-  FormControlLabel,
-  Switch,
   Button,
   Typography
 } from '@mui/material';
@@ -35,9 +32,13 @@ const customStyles = {
   }),
   menu: (provided) => ({
     ...provided,
-    zIndex: 10,
+    zIndex: 9999,
     boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
     border: '1px solid #e0e0e0'
+  }),
+  menuPortal: base => ({
+    ...base,
+    zIndex: 9999
   }),
   control: (provided, state) => ({
     ...provided,
@@ -59,6 +60,12 @@ const customStyles = {
   }),
 };
 
+const predictionTypeOptions = [
+  { value: 'free', label: 'Free' },
+  { value: 'vip', label: 'VIP' },
+  { value: 'platinum', label: 'Platinum' }
+];
+
 export default function FormPrediction() {
   const dispatch = useDispatch();
 
@@ -71,7 +78,8 @@ export default function FormPrediction() {
     coast: '',
     isVip: false,
     isVisible: true,
-    
+    isPlatinum: false,
+
   });
 
   const { availableDays, countries, leagues, matches, events } = useSelector(state => ({
@@ -192,13 +200,6 @@ export default function FormPrediction() {
     }));
   };
 
-  const handleSwitchChange = () => {
-    setFormData(prevData => ({
-      ...prevData,
-      isVip: !prevData.isVip,
-    }));
-  };
-
   const handleSubmit = () => {
     dispatch(addPrediction(formData));
   };
@@ -215,6 +216,8 @@ export default function FormPrediction() {
             Date
           </Typography>
           <ReactSelect
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
             value={daysOptions.find(option => option.value === formData.selectedDay)}
             onChange={handleFormDataChange('selectedDay')}
             options={daysOptions}
@@ -230,6 +233,8 @@ export default function FormPrediction() {
             Pays
           </Typography>
           <ReactSelect
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
             value={countryOptions.find(option => option.value === formData.country)}
             onChange={handleFormDataChange('country')}
             options={countryOptions}
@@ -245,6 +250,8 @@ export default function FormPrediction() {
             Championnat
           </Typography>
           <ReactSelect
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
             value={leagueOptions.find(option => option.value === formData.championship)}
             onChange={handleFormDataChange('championship')}
             options={leagueOptions}
@@ -262,6 +269,8 @@ export default function FormPrediction() {
         </Typography>
         <FormControl fullWidth>
           <ReactSelect
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
             value={matchOptions.find(option => option.value === formData.fixture)}
             onChange={handleFormDataChange('fixture')}
             options={matchOptions}
@@ -288,39 +297,41 @@ export default function FormPrediction() {
           mt: { md: '10px' }
         }
       }}>
-<FormControl sx={{ flex: 1 }}>
-  <Typography variant="body2" sx={{ mb: 1, fontWeight: 500, color: '#424242' }}>
-    Prédiction
-  </Typography>
-  <ReactSelect
-    value={eventOptions.find(option => option.value === formData.prediction)}
-    onChange={handleFormDataChange('prediction')}
-    options={eventOptions}
-    menuPlacement="top"  // Ajout de cette ligne pour forcer l'ouverture vers le haut
-    styles={{
-      ...customStyles,
-      control: (provided, state) => ({
-        ...provided,
-        border: state.isFocused ? '2px solid #1976d2' : '1px solid #e0e0e0',
-        boxShadow: 'none',
-        '&:hover': {
-          border: state.isFocused ? '2px solid #1976d2' : '1px solid #1976d2'
-        }
-      }),
-      menu: (provided) => ({
-        ...provided,
-        zIndex: 10,
-        boxShadow: '0 -2px 4px rgba(0,0,0,0.1)',  // Ombre ajustée pour le menu vers le haut
-        border: '1px solid #e0e0e0',
-        bottom: '100%',  // Position le menu au-dessus du select
-        top: 'auto'  // Désactive le positionnement par défaut
-      })
-    }}
-    isSearchable={true}
-    isClearable={true}
-    placeholder="Choisir Prédiction"
-  />
-</FormControl>
+        <FormControl sx={{ flex: 1 }}>
+          <Typography variant="body2" sx={{ mb: 1, fontWeight: 500, color: '#424242' }}>
+            Prédiction
+          </Typography>
+          <ReactSelect
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
+            value={eventOptions.find(option => option.value === formData.prediction)}
+            onChange={handleFormDataChange('prediction')}
+            options={eventOptions}
+            menuPlacement="top"  // Ajout de cette ligne pour forcer l'ouverture vers le haut
+            styles={{
+              ...customStyles,
+              control: (provided, state) => ({
+                ...provided,
+                border: state.isFocused ? '2px solid #1976d2' : '1px solid #e0e0e0',
+                boxShadow: 'none',
+                '&:hover': {
+                  border: state.isFocused ? '2px solid #1976d2' : '1px solid #1976d2'
+                }
+              }),
+              menu: (provided) => ({
+                ...provided,
+                zIndex: 10,
+                boxShadow: '0 -2px 4px rgba(0,0,0,0.1)',  // Ombre ajustée pour le menu vers le haut
+                border: '1px solid #e0e0e0',
+                bottom: '100%',  // Position le menu au-dessus du select
+                top: 'auto'  // Désactive le positionnement par défaut
+              })
+            }}
+            isSearchable={true}
+            isClearable={true}
+            placeholder="Choisir Prédiction"
+          />
+        </FormControl>
 
         <FormControl sx={{ flex: 1 }}>
           <Typography variant="body2" sx={{ mb: 1, fontWeight: 500, color: '#424242' }}>
@@ -351,25 +362,25 @@ export default function FormPrediction() {
 
         <FormControl sx={{ flex: 1 }}>
           <Typography variant="body2" sx={{ mb: 1, fontWeight: 500, color: '#424242' }}>
-            VIP
+            Type de Prédiction
           </Typography>
-          <Box sx={{
-            height: '50px',
-            display: 'flex',
-            alignItems: 'center'
-          }}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={formData.isVip}
-                  onChange={handleSwitchChange}
-                  color="primary"
-                />
-              }
-              label=""
-              sx={{ m: 0 }}
-            />
-          </Box>
+          <ReactSelect
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
+            value={predictionTypeOptions.find(option => option.value === formData.predictionType)}
+            onChange={(selectedOption) => {
+              setFormData(prevData => ({
+                ...prevData,
+                predictionType: selectedOption.value,
+                isVip: selectedOption.value === 'vip',
+                isPlatinum: selectedOption.value === 'platinum'
+              }));
+            }}
+            options={predictionTypeOptions}
+            styles={customStyles}
+            isSearchable={false}
+            placeholder="Choisir Type"
+          />
         </FormControl>
       </Box>
 
@@ -383,6 +394,7 @@ export default function FormPrediction() {
           height: '48px',
           textTransform: 'none',
           fontWeight: 600,
+          marginTop: 2,
           boxShadow: 'none',
           '&:hover': {
             boxShadow: 'none',

@@ -316,7 +316,7 @@ export default function DataTable({
                 backgroundColor: "rgb(11 87 208 / 10%)",
               },
               "& .MuiDataGrid-virtualScroller": {
-                overflowX: "hidden",
+                overflowX: "auto",
               },
             }}
           />
